@@ -1,4 +1,4 @@
-# Copyright (C) 2022 The Dagger Authors.
+# Copyright (C) 2023 The Dagger Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,30 +20,15 @@ load(
     "DOCLINT_HTML_AND_SYNTAX",
     "DOCLINT_REFERENCES",
 )
-load("//:test_defs.bzl", "GenJavaTests")
+load("//:test_defs.bzl", "GenJavaLibrary")
 
 package(default_visibility = ["//:src"])
 
-# TODO(b/265156633): These transitive dep shouldn't be needed, but are required because KSP
-# doesn't have access to transitive deps on classpath.
-TRANSITIVE_DEPS = [
-    "//javatests/dagger/functional/multipackage/foo",
-    "//javatests/dagger/functional/multipackage/grandsub",
-]
-
-GenJavaTests(
-    name = "multipackage",
+GenJavaLibrary(
+    name = "moduleconstructor",
     srcs = glob(["*.java"]),
-    gen_library_deps = TRANSITIVE_DEPS + [
-        "//javatests/dagger/functional/multipackage/a",
-        "//javatests/dagger/functional/multipackage/moduleconstructor",
-        "//javatests/dagger/functional/multipackage/primitives",
-        "//javatests/dagger/functional/multipackage/sub",
-    ],
     javacopts = DOCLINT_HTML_AND_SYNTAX + DOCLINT_REFERENCES,
     deps = [
         "//:dagger_with_compiler",
-        "//third_party/java/junit",
-        "//third_party/java/truth",
     ],
 )
